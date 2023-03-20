@@ -1,0 +1,34 @@
+version: "3.9"
+
+services: 
+  www:
+    build:
+      context: ./dockerfiles
+      dockerfile: www.dockerfile
+    container_name: bidc_php_apache
+    image: php7.4_apache
+    volumes: 
+      - ./Project:/var/www/html   #프로젝트 경로(로컬경로:도커안의경로)
+      - ./config/php/php_7.4.ini:/usr/local/etc/php/php.ini               # PHP 설정
+      - ./config/apache2/apache2.conf:/etc/apache2/apache2.conf           # 아파치 설정
+      # - ./config/apache2/httpd.conf:/usr/local/apache2/conf/httpd.conf #apache2 설정파일
+    ports:
+      - '80:80'
+
+
+
+  # mysql:
+  #   image: mariadb:10.2
+  #   container_name: bidc_apm_mariadb
+  #   restart: unless-stopped
+  #   tty: true
+  #   ports:
+  #     - "3306:3306"
+  #   environment:
+  #     MYSQL_HOST: localhost
+  #     MYSQL_DATABASE: dbname #디비명
+  #     MYSQL_USER: user #사용자명
+  #     MYSQL_PASSWORD: password #사용자비밀번호
+  #     MYSQL_ROOT_PASSWORD: password #루트계정비밀번호
+  #     SERVICE_TAGS: dev
+  #     SERVICE_NAME: mysql
