@@ -2,13 +2,14 @@ FROM php:7.4-apache
 
 WORKDIR /var/www/html
 
-RUN docker-php-ext-install mysqli
+RUN docker-php-ext-install mysqli && a2enmod rewrite
 RUN apt-get update \
 	&& apt-get install -y \
 	vim \
 	net-tools \
 	procps				# ps 되도록 하기 위함.
 
+# RUN a2enmod rewrite
 
 
 	
