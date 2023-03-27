@@ -10,22 +10,43 @@ services:
     container_name: bidc_php_apache
     image: php7.4_apache
     volumes: 
-      # - D:\Project_Space\PHP_mars_Project_utf8\Manage\okems:/var/www/html/okems   #프로젝트 경로(로컬경로:도커안의경로)
-      - ./Project:/var/www/html/okems   #프로젝트 경로(로컬경로:도커안의경로)
+      - D:\Project_Space\PHP_mars_Project_utf8\Manage\okems:/var/www/html/okems   #프로젝트 경로(로컬경로:도커안의경로)
+      # - /home/okems/public_svn:/var/www/html/okems   #프로젝트 경로(로컬경로:도커안의경로)
+      # - ./Project:/var/www/html/okems   #프로젝트 경로(로컬경로:도커안의경로)
 
       - ./config/php/php_7.4.ini:/usr/local/etc/php/php.ini
       - ./config/apache2/apache2.conf:/etc/apache2/apache2.conf
       - ./config/apache2/httpd-vhost.conf:/etc/apache2/sites-enabled/httpd-vhost.conf
+
+      - ./config/certbot:/etc/letsencrypt
+    # environment:
+    #   - DOMAIN=bid-w1.okems.net
+    #   - EMAIL=jade9877@hanmail.net
+      
     ports:
       - '80:80'
-      
+      - "443:443"
+    
+    command: "apache2ctl -D FOREGROUND"
     # env_file:
     #   - mysql.env
 
 
+  #   networks:
+  #     - my-network
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./config/certbot:/etc/letsencrypt
+      - D:\Project_Space\PHP_mars_Project_utf8\Manage\okems:/var/www/html/okems   #프로젝트 경로(로컬경로:도커안의경로)
+    # environment:
+    #   - DOMAIN=bid-w1.okems.net
+    #   - EMAIL=jade9877@hanmail.net
+    depends_on:
+      - www
+    command: certonly --webroot --webroot-path=/var/www/html/okems --agree-tos --no-eff-email --email jade9877@hanmail.net -d bid-w1.okems.net
     networks:
       - my-network
-
 # 네트워크 만들기 명령어 : docker network create my-network
 # 이걸 해야 외부에 있는 mysql connection을 할 수 있다.
 networks:

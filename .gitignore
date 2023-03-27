@@ -1,3 +1,4 @@
+config/certbot/*
 Project/*
 !Project/index.html
 !Project/test.php
